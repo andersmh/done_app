@@ -40,11 +40,9 @@ class _HomeContentPageState extends State<HomeContentPage> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: <Widget>[
-                MyPicture(),
-                MyPicture(),
-                MyPicture(),
-                MyPicture(),
-                MyPicture(),
+                myCategory('Physics\nAssignment'),
+                myCategory('Reparing\nThe\nCar'),
+                myCategory('Dinne\ningrediens'),
               ],
             ),
           ),
@@ -197,16 +195,39 @@ class _HomeContentPageState extends State<HomeContentPage> {
 
 //#C418F7 pink
 //#007ECE blue
-  Container MyPicture() {
+  Container myCategory(String categoryName) {
     return Container(
       width: 250.0,
       height: 250.0,
       padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
-      child: Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+      child: DecoratedBox(
+        decoration: new BoxDecoration(
+          borderRadius: BorderRadius.circular(40),
+          gradient: new LinearGradient(
+            begin: FractionalOffset.topLeft,
+            end: FractionalOffset.bottomCenter,
+            colors: [
+              const Color(0xff007ECE),
+              const Color(0xffC418F7),
+            ],
+          ),
+        ),
         child: Wrap(
-          children: <Widget>[],
+          children: <Widget>[
+            SizedBox(
+              height: 40,
+              width: 40,
+            ),
+            Text(
+              categoryName,
+              style: TextStyle(
+                fontSize: 20,
+                fontFamily: 'Futura',
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            )
+          ],
         ),
       ),
     );

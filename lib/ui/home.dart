@@ -10,6 +10,7 @@ class Home extends StatelessWidget {
         elevation: 0,
         title: Text(
           "Tasks.",
+          overflow: TextOverflow.fade,
           style: TextStyle(
             color: Colors.black,
             fontSize: 60,
