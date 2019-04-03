@@ -33,6 +33,21 @@ class _HomeContentPageState extends State<HomeContentPage> {
       backgroundColor: Colors.white,
       body: Column(
         children: <Widget>[
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 20.0),
+            height: 220,
+            color: Color(0xFF020E38),
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: <Widget>[
+                MyPicture(),
+                MyPicture(),
+                MyPicture(),
+                MyPicture(),
+                MyPicture(),
+              ],
+            ),
+          ),
           Flexible(
             child: ListView.builder(
               padding: EdgeInsets.all(8.0),
@@ -40,7 +55,8 @@ class _HomeContentPageState extends State<HomeContentPage> {
               itemCount: _itemList.length,
               itemBuilder: (_, int index) {
                 return Card(
-                  color: Colors.grey,
+                  color: Colors.white,
+                  elevation: 0,
                   child: ListTile(
                     title: _itemList[index],
                     onLongPress: () => _updateItem(_itemList[index], index),
@@ -82,8 +98,8 @@ class _HomeContentPageState extends State<HomeContentPage> {
               controller: _textEditingController,
               autofocus: true,
               decoration: InputDecoration(
-                  labelText: "Item",
-                  hintText: "eg. Don't buy stuff",
+                  labelText: "Task",
+                  hintText: "Task description here",
                   icon: Icon(Icons.note_add)),
             ),
           )
@@ -91,16 +107,16 @@ class _HomeContentPageState extends State<HomeContentPage> {
       ),
       actions: <Widget>[
         FlatButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text("Cancel"),
-        ),
-        FlatButton(
           onPressed: () {
             _handleSubmitted(_textEditingController.text);
             _textEditingController.clear();
             Navigator.pop(context);
           },
           child: Text("Save"),
+        ),
+        FlatButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text("Cancel"),
         ),
       ],
     );
@@ -137,8 +153,8 @@ class _HomeContentPageState extends State<HomeContentPage> {
               controller: _textEditingController,
               autofocus: true,
               decoration: InputDecoration(
-                  labelText: "Item",
-                  hintText: "ed. Don't buy stuff",
+                  labelText: "Task",
+                  hintText: "Task description here",
                   icon: Icon(Icons.update)),
             ),
           )
@@ -177,5 +193,22 @@ class _HomeContentPageState extends State<HomeContentPage> {
         _itemList[index].itemName = item.itemName;
       });
     });
+  }
+
+//#C418F7 pink
+//#007ECE blue
+  Container MyPicture() {
+    return Container(
+      width: 250.0,
+      height: 250.0,
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+        child: Wrap(
+          children: <Widget>[],
+        ),
+      ),
+    );
   }
 }

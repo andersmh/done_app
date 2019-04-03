@@ -40,7 +40,7 @@ class Item extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(8.0),
+      margin: EdgeInsets.all(6.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -50,9 +50,10 @@ class Item extends StatelessWidget {
               Text(
                 _itemName,
                 style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.9,
+                  color: Colors.black,
+                  fontFamily: 'Futura',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 17,
                 ),
               ),
             ],
