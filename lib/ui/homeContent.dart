@@ -1,5 +1,7 @@
 import '../model/item.dart';
-import '../util/database_client.dart';
+import '../util/database_item_client.dart';
+import '../util/database_category_client.dart';
+
 import '../util/date_formatter.dart';
 import '../model/category.dart';
 import 'package:flutter/material.dart';
@@ -11,23 +13,15 @@ class HomeContentPage extends StatefulWidget {
 
 class _HomeContentPageState extends State<HomeContentPage> {
   final _textEditingController = new TextEditingController();
-  var db = new DatabaseHelper();
+  var dbi = new DatabaseHelper();
+  var dbc = new DatabaseHelperCategory();
   final List<Item> _itemList = <Item>[];
-  final List<Category> _categoryList = <Category>[new Category("9ss")];
+  final List<Category> _categoryList = <Category>[];
 
   @override
   void initState() {
     _readItemList();
-  }
-
-  void _handleSubmitted(String text) async {
-    Item item = new Item(text, dateFormatted());
-    int savedItemId = await db.saveItem(item);
-    Item addedItem = await db.getItem(savedItemId);
-
-    setState(() {
-      _itemList.insert(0, addedItem);
-    });
+    _readCategoryList();
   }
 
   @override
@@ -49,7 +43,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
             backgroundColor: Color(0xff020E38),
           ),
           SizedBox(
-            height: 10,
+            height: 30,
             width: 10,
           ),
           FloatingActionButton(
@@ -59,7 +53,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
               Icons.create_new_folder,
               color: Colors.white,
             ),
-            onPressed: null,
+            onPressed: _addCategoryForm,
             backgroundColor: Color(0xff020E38),
           ),
         ],
@@ -69,7 +63,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
           Container(
             color: Color(0xFF020E38),
             child: Container(
-              height: 110.0,
+              height: 140.0,
               width: 1000,
               decoration: new BoxDecoration(
                 color: Colors.white,
@@ -77,7 +71,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
                     new BorderRadius.only(bottomLeft: Radius.circular(70)),
               ),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 40),
                 child: Text(
                   "Tasks.",
                   style: TextStyle(
@@ -115,16 +109,50 @@ class _HomeContentPageState extends State<HomeContentPage> {
                       ),
                     ),
                   )
-                : ListView(
+                : ListView.builder(
                     scrollDirection: Axis.horizontal,
                     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
-                    children: <Widget>[
-                      myCategory('Physics Assignemt Questions'),
-                      myCategory('Clean The House Tasks By Room'),
-                      myCategory('Fix The Car One Part At The Time'),
-                      myCategory('Countrys To Visit Before I Die'),
-                    ],
-                  ),
+                    itemCount: _categoryList.length,
+                    itemBuilder: (_, int index) {
+                      return Container(
+                        width: 250.0,
+                        height: 250.0,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+                        child: DecoratedBox(
+                          decoration: new BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            gradient: new LinearGradient(
+                              begin: FractionalOffset.topLeft,
+                              end: FractionalOffset.bottomCenter,
+                              colors: [
+                                const Color(0xff007ECE),
+                                const Color(0xffC418F7),
+                              ],
+                            ),
+                          ),
+                          child: Center(
+                            child: Wrap(
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 30),
+                                  child: Text(
+                                    _categoryList[index].categoryName,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontFamily: 'Futura',
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
           ),
           Flexible(
             child: _itemList.isEmpty
@@ -182,6 +210,38 @@ class _HomeContentPageState extends State<HomeContentPage> {
     );
   }
 
+  _readItemList() async {
+    List items = await dbi.getItems();
+    items.forEach((item) {
+      setState(() {
+        _itemList.add(Item.map(item));
+      });
+    });
+  }
+
+  _readCategoryList() async {
+    List categorys = await dbc.getAllCategorys();
+    categorys.forEach((category) {
+      setState(() {
+        _categoryList.add(Category.map(category));
+      });
+    });
+  }
+
+  _deleteListItem(int id, int index) async {
+    await dbi.deleteItem(id);
+    setState(() {
+      _itemList.removeAt(index);
+    });
+  }
+
+  _deleteListCategory(int id, int index) async {
+    await dbc.deleteCategory(id);
+    setState(() {
+      _categoryList.removeAt(index);
+    });
+  }
+
   void _addTaskForm() {
     var alert = AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
@@ -237,7 +297,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
         FlatButton(
           onPressed: () {
             if (_textEditingController.text != '') {
-              _handleSubmitted(_textEditingController.text);
+              _handleSubmittedItem(_textEditingController.text);
             }
             _textEditingController.clear();
             Navigator.pop(context);
@@ -259,20 +319,81 @@ class _HomeContentPageState extends State<HomeContentPage> {
         });
   }
 
-  _readItemList() async {
-    List items = await db.getAllItems();
-    items.forEach((item) {
-      setState(() {
-        _itemList.add(Item.map(item));
-      });
-    });
-  }
-
-  _deleteListItem(int id, int index) async {
-    await db.deleteItem(id);
-    setState(() {
-      _itemList.removeAt(index);
-    });
+  void _addCategoryForm() {
+    var alert = AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      backgroundColor: Color(0xFF020E38),
+      elevation: 0,
+      contentTextStyle: TextStyle(color: Colors.white, fontFamily: 'Futura'),
+      title: Center(
+        child: Text(
+          'Add new category',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Futura',
+          ),
+        ),
+      ),
+      content: Row(
+        children: <Widget>[
+          Expanded(
+            child: TextField(
+              style: new TextStyle(color: Colors.white, fontFamily: 'Futura'),
+              controller: _textEditingController,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: "Category name here",
+                labelStyle: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Futura',
+                ),
+                hintStyle: TextStyle(
+                  color: Color(0x44FFFFFF),
+                ),
+                suffixStyle: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Futura',
+                ),
+                fillColor: Colors.white,
+              ),
+            ),
+          )
+        ],
+      ),
+      actions: <Widget>[
+        FlatButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            "Cancel",
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Futura',
+            ),
+          ),
+        ),
+        FlatButton(
+          onPressed: () {
+            if (_textEditingController.text != '') {
+              _handleSubmittedCategory(_textEditingController.text);
+            }
+            _textEditingController.clear();
+            Navigator.pop(context);
+          },
+          child: Text(
+            "Save",
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Futura',
+            ),
+          ),
+        ),
+      ],
+    );
+    showDialog(
+        context: context,
+        builder: (_) {
+          return alert;
+        });
   }
 
   _updateTaskForm(Item item, int index) {
@@ -337,8 +458,8 @@ class _HomeContentPageState extends State<HomeContentPage> {
                 },
               );
 
-              _handleSubmittedUpdate(index, item);
-              await db.updateItem(newItemUpdated);
+              _handleSubmittedUpdateItem(index, item);
+              await dbi.updateItem(newItemUpdated);
               setState(() {
                 _readItemList();
               });
@@ -362,7 +483,93 @@ class _HomeContentPageState extends State<HomeContentPage> {
     );
   }
 
-  void _handleSubmittedUpdate(int index, Item item) {
+  _updateCategoryForm(Category category, int index) {
+    var alert = AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      backgroundColor: Color(0xFF020E38),
+      elevation: 0,
+      contentTextStyle: TextStyle(color: Colors.white, fontFamily: 'Futura'),
+      title: Center(
+        child: Text(
+          'Update category',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Futura',
+          ),
+        ),
+      ),
+      content: Row(
+        children: <Widget>[
+          Expanded(
+            child: TextField(
+              style: new TextStyle(color: Colors.white, fontFamily: 'Futura'),
+              controller: _textEditingController,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: "Category name here",
+                labelStyle: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Futura',
+                ),
+                hintStyle: TextStyle(
+                  color: Color(0x44FFFFFF),
+                ),
+                suffixStyle: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Futura',
+                ),
+                fillColor: Colors.white,
+              ),
+            ),
+          )
+        ],
+      ),
+      actions: <Widget>[
+        FlatButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            "Cancel",
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Futura',
+            ),
+          ),
+        ),
+        FlatButton(
+            onPressed: () async {
+              Category newCategoryUpdated = Category.fromMap(
+                {
+                  "categoryName": _textEditingController.text,
+                  "id": category.id
+                },
+              );
+
+              _handleSubmittedUpdatedCategory(index, category);
+              await dbc.updateCategory(newCategoryUpdated);
+              setState(() {
+                _readCategoryList();
+              });
+              Navigator.pop(context);
+            },
+            child: Text(
+              "Update",
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Futura',
+              ),
+            )),
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (_) {
+        return alert;
+      },
+    );
+  }
+
+  void _handleSubmittedUpdateItem(int index, Item item) {
     setState(() {
       _itemList.removeWhere((element) {
         _itemList[index].itemName = item.itemName;
@@ -370,61 +577,31 @@ class _HomeContentPageState extends State<HomeContentPage> {
     });
   }
 
-  Container myCategory(String categoryName) {
-    return Container(
-      width: 250.0,
-      height: 250.0,
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
-      child: DecoratedBox(
-        decoration: new BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          gradient: new LinearGradient(
-            begin: FractionalOffset.topLeft,
-            end: FractionalOffset.bottomCenter,
-            colors: [
-              const Color(0xff007ECE),
-              const Color(0xffC418F7),
-            ],
-          ),
-        ),
-        child: Wrap(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-              child: Text(
-                categoryName,
-                style: TextStyle(
-                  fontSize: 25,
-                  fontFamily: 'Futura',
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  void _handleSubmittedUpdatedCategory(int index, Category category) {
+    setState(() {
+      _categoryList.removeWhere((element) {
+        _categoryList[index].categoryName = category.categoryName;
+      });
+    });
   }
 
-  Container myCategoryAdd() {
-    return Container(
-      width: 250.0,
-      height: 250.0,
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
-      child: DecoratedBox(
-        decoration: new BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          gradient: new LinearGradient(
-            begin: FractionalOffset.topLeft,
-            end: FractionalOffset.bottomCenter,
-            colors: [
-              const Color(0xff007ECE),
-              const Color(0xffC418F7),
-            ],
-          ),
-        ),
-      ),
-    );
+  void _handleSubmittedItem(String text) async {
+    Item item = new Item(text, dateFormatted());
+    int savedItemId = await dbi.saveItem(item);
+    Item addedItem = await dbi.getItem(savedItemId);
+
+    setState(() {
+      _itemList.insert(0, addedItem);
+    });
+  }
+
+  void _handleSubmittedCategory(String text) async {
+    Category category = new Category(text);
+    int savedCategoryId = await dbc.saveCategory(category);
+    Category addedCategory = await dbc.getCategory(savedCategoryId);
+
+    setState(() {
+      _categoryList.insert(0, addedCategory);
+    });
   }
 }

@@ -9,12 +9,12 @@ class Category extends StatelessWidget {
   Category(this._categoryName);
 
   Category.map(dynamic obj) {
-    this._categoryName = obj["itemName"];
+    this._categoryName = obj["categoryName"];
   }
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
-    map["itemName"] = this._categoryName;
+    map["categoryName"] = this._categoryName;
 
     if (_id != null) {
       map["id"] = _id;
@@ -23,7 +23,7 @@ class Category extends StatelessWidget {
   }
 
   Category.fromMap(Map<String, dynamic> map) {
-    this._categoryName = map["itemName"];
+    this._categoryName = map["categoryName"];
     this._id = map["id"];
   }
 
@@ -42,25 +42,39 @@ class Category extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(6.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      width: 250.0,
+      height: 250.0,
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
+      child: DecoratedBox(
+        decoration: new BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          gradient: new LinearGradient(
+            begin: FractionalOffset.topLeft,
+            end: FractionalOffset.bottomCenter,
+            colors: [
+              const Color(0xff007ECE),
+              const Color(0xffC418F7),
+            ],
+          ),
+        ),
+        child: Center(
+          child: Wrap(
             children: <Widget>[
-              Text(
-                _categoryName,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Futura',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 17,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                child: Text(
+                  _categoryName,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'Futura',
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }

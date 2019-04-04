@@ -1,19 +1,19 @@
 import 'dart:io';
 
-import '../model/item.dart';
+import '../model/category.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DatabaseHelper {
-  static final DatabaseHelper _instance = new DatabaseHelper.internal();
+class DatabaseHelperCategory {
+  static final DatabaseHelperCategory _instance =
+      new DatabaseHelperCategory.internal();
 
-  factory DatabaseHelper() => _instance;
+  factory DatabaseHelperCategory() => _instance;
 
-  final String tableName = "nodo";
+  final String tableName = "category";
   final String columnId = "id";
-  final String columnItemName = "itemName";
-  final String columnDateCreated = "dateCreated";
+  final String columnCategoryName = "categoryName";
 
   static Database _db;
 
@@ -26,11 +26,11 @@ class DatabaseHelper {
     return _db;
   }
 
-  DatabaseHelper.internal();
+  DatabaseHelperCategory.internal();
 
   initDb() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentDirectory.path, "maindb.db");
+    String path = join(documentDirectory.path, "categorydb.db");
 
     var ourDb = await openDatabase(path, version: 1, onCreate: _onCreate);
     print(documentDirectory);
@@ -40,16 +40,16 @@ class DatabaseHelper {
 
   void _onCreate(Database db, int newVersion) async {
     await db.execute(
-        "CREATE TABLE $tableName($columnId INTEGER PRIMARY KEY, $columnItemName TEXT, $columnDateCreated TEXT)");
+        "CREATE TABLE $tableName($columnId INTEGER PRIMARY KEY, $columnCategoryName TEXT)");
   }
 
-  Future<int> saveItem(Item item) async {
+  Future<int> saveCategory(Category category) async {
     var dbClient = await db;
-    int res = await dbClient.insert("nodo", item.toMap());
+    int res = await dbClient.insert("category", category.toMap());
     return res;
   }
 
-  Future<List<Map<String, dynamic>>> getAllItems() async {
+  Future<List<Map<String, dynamic>>> getAllCategorys() async {
     var dbClient = await db;
     return await dbClient.query(tableName);
   }
@@ -57,28 +57,28 @@ class DatabaseHelper {
   Future<int> getCount() async {
     var dbClient = await db;
     return Sqflite.firstIntValue(await dbClient.rawQuery('''
-          SELECT COUNT(*) FROM $tableName ORDER BY $columnItemName ASC
+          SELECT COUNT(*) FROM $tableName ORDER BY $columnCategoryName ASC
         '''));
   }
 
-  Future<Item> getItem(int id) async {
+  Future<Category> getCategory(int id) async {
     var dbClient = await db;
     List<Map> res = await dbClient
         .rawQuery("SELECT * FROM $tableName WHERE $columnId = $id");
     if (res.length == 0) return null;
-    return new Item.fromMap(res.first);
+    return new Category.fromMap(res.first);
   }
 
-  Future<int> deleteItem(int id) async {
+  Future<int> deleteCategory(int id) async {
     var dbClient = await db;
     return await dbClient
         .delete("$tableName", where: "$columnId = ?", whereArgs: [id]);
   }
 
-  Future<int> updateItem(Item item) async {
+  Future<int> updateCategory(Category category) async {
     var dbClient = await db;
-    return await dbClient.update(tableName, item.toMap(),
-        where: "$columnId = ?", whereArgs: [item.id]);
+    return await dbClient.update(tableName, category.toMap(),
+        where: "$columnId = ?", whereArgs: [category.id]);
   }
 
   Future close() async {
