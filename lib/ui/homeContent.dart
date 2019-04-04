@@ -13,7 +13,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
   final _textEditingController = new TextEditingController();
   var db = new DatabaseHelper();
   final List<Item> _itemList = <Item>[];
-  final List<Category> _categoryList = <Category>[];
+  final List<Category> _categoryList = <Category>[new Category("9ss")];
 
   @override
   void initState() {
@@ -34,15 +34,35 @@ class _HomeContentPageState extends State<HomeContentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showFormDialog,
-        tooltip: "Add Task",
-        backgroundColor: Color(0xff020E38),
-        child: ListTile(
-          title: Icon(
-            Icons.add,
+      floatingActionButton: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          FloatingActionButton(
+            heroTag: null,
+            elevation: 0,
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            onPressed: _showFormDialog,
+            backgroundColor: Color(0xff020E38),
           ),
-        ),
+          SizedBox(
+            height: 10,
+            width: 10,
+          ),
+          FloatingActionButton(
+            heroTag: null,
+            elevation: 0,
+            child: Icon(
+              Icons.create_new_folder,
+              color: Colors.white,
+            ),
+            onPressed: null,
+            backgroundColor: Color(0xff020E38),
+          ),
+        ],
       ),
       body: Column(
         children: <Widget>[
