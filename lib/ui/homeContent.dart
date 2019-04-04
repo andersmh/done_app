@@ -45,7 +45,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
               Icons.add,
               color: Colors.white,
             ),
-            onPressed: _showFormDialog,
+            onPressed: _addTaskForm,
             backgroundColor: Color(0xff020E38),
           ),
           SizedBox(
@@ -162,7 +162,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
                           ),
                           contentPadding: EdgeInsets.symmetric(horizontal: 5),
                           onLongPress: () =>
-                              _updateItem(_itemList[index], index),
+                              _updateTaskForm(_itemList[index], index),
                           trailing: Listener(
                             key: Key(_itemList[index].itemName),
                             child: Icon(Icons.delete, color: Colors.black),
@@ -182,23 +182,58 @@ class _HomeContentPageState extends State<HomeContentPage> {
     );
   }
 
-  void _showFormDialog() {
+  void _addTaskForm() {
     var alert = AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      backgroundColor: Color(0xFF020E38),
+      elevation: 0,
+      contentTextStyle: TextStyle(color: Colors.white, fontFamily: 'Futura'),
+      title: Center(
+        child: Text(
+          'Add new task',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Futura',
+          ),
+        ),
+      ),
       content: Row(
         children: <Widget>[
           Expanded(
             child: TextField(
+              style: new TextStyle(color: Colors.white, fontFamily: 'Futura'),
               controller: _textEditingController,
               autofocus: true,
               decoration: InputDecoration(
-                  labelText: "Task",
-                  hintText: "Task description here",
-                  icon: Icon(Icons.note_add)),
+                hintText: "Task description here",
+                labelStyle: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Futura',
+                ),
+                hintStyle: TextStyle(
+                  color: Color(0x44FFFFFF),
+                ),
+                suffixStyle: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Futura',
+                ),
+                fillColor: Colors.white,
+              ),
             ),
           )
         ],
       ),
       actions: <Widget>[
+        FlatButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            "Cancel",
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Futura',
+            ),
+          ),
+        ),
         FlatButton(
           onPressed: () {
             if (_textEditingController.text != '') {
@@ -207,11 +242,13 @@ class _HomeContentPageState extends State<HomeContentPage> {
             _textEditingController.clear();
             Navigator.pop(context);
           },
-          child: Text("Save"),
-        ),
-        FlatButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text("Cancel"),
+          child: Text(
+            "Save",
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Futura',
+            ),
+          ),
         ),
       ],
     );
@@ -238,24 +275,58 @@ class _HomeContentPageState extends State<HomeContentPage> {
     });
   }
 
-  _updateItem(Item item, int index) {
+  _updateTaskForm(Item item, int index) {
     var alert = AlertDialog(
-      title: Text("Update Item"),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      backgroundColor: Color(0xFF020E38),
+      elevation: 0,
+      contentTextStyle: TextStyle(color: Colors.white, fontFamily: 'Futura'),
+      title: Center(
+        child: Text(
+          'Update task',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Futura',
+          ),
+        ),
+      ),
       content: Row(
         children: <Widget>[
           Expanded(
             child: TextField(
+              style: new TextStyle(color: Colors.white, fontFamily: 'Futura'),
               controller: _textEditingController,
               autofocus: true,
               decoration: InputDecoration(
-                  labelText: "Task",
-                  hintText: "Task description here",
-                  icon: Icon(Icons.update)),
+                hintText: "Task description here",
+                labelStyle: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Futura',
+                ),
+                hintStyle: TextStyle(
+                  color: Color(0x44FFFFFF),
+                ),
+                suffixStyle: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Futura',
+                ),
+                fillColor: Colors.white,
+              ),
             ),
           )
         ],
       ),
       actions: <Widget>[
+        FlatButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            "Cancel",
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Futura',
+            ),
+          ),
+        ),
         FlatButton(
             onPressed: () async {
               Item newItemUpdated = Item.fromMap(
@@ -273,9 +344,13 @@ class _HomeContentPageState extends State<HomeContentPage> {
               });
               Navigator.pop(context);
             },
-            child: Text("Update")),
-        FlatButton(
-            onPressed: () => Navigator.pop(context), child: Text("Cancel"))
+            child: Text(
+              "Update",
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Futura',
+              ),
+            )),
       ],
     );
 
