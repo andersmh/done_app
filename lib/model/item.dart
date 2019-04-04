@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 
 class Item extends StatelessWidget {
   String _itemName;
+  String _dateCreated;
   int _id;
 
-  Item(this._itemName);
+  Item(this._itemName, this._dateCreated);
 
   Item.map(dynamic obj) {
     this._itemName = obj["itemName"];
+    this._dateCreated = obj["dateCreated"];
   }
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
     map["itemName"] = this._itemName;
+    map["dateCreated"] = this._dateCreated;
 
     if (_id != null) {
       map["id"] = _id;
@@ -21,6 +24,7 @@ class Item extends StatelessWidget {
   }
 
   Item.fromMap(Map<String, dynamic> map) {
+    this._dateCreated = map["dateCreated"];
     this._itemName = map["itemName"];
     this._id = map["id"];
   }
@@ -31,6 +35,12 @@ class Item extends StatelessWidget {
 
   set itemName(String value) {
     _itemName = value;
+  }
+
+  String get dateCreated => _dateCreated;
+
+  set dateCreated(String value) {
+    _dateCreated = value;
   }
 
   int get id => _id;

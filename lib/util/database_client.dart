@@ -13,6 +13,7 @@ class DatabaseHelper {
   final String tableName = "nodo";
   final String columnId = "id";
   final String columnItemName = "itemName";
+  final String columnDateCreated = "dateCreated";
 
   static Database _db;
 
@@ -39,7 +40,7 @@ class DatabaseHelper {
 
   void _onCreate(Database db, int newVersion) async {
     await db.execute(
-        "CREATE TABLE $tableName($columnId INTEGER PRIMARY KEY, $columnItemName TEXT)");
+        "CREATE TABLE $tableName($columnId INTEGER PRIMARY KEY, $columnItemName TEXT, $columnDateCreated TEXT)");
   }
 
   Future<int> saveItem(Item item) async {

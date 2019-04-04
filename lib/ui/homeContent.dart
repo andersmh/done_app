@@ -1,5 +1,6 @@
 import '../model/item.dart';
 import '../util/database_client.dart';
+import '../util/date_formatter.dart';
 import 'package:flutter/material.dart';
 
 class HomeContentPage extends StatefulWidget {
@@ -18,7 +19,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
   }
 
   void _handleSubmitted(String text) async {
-    Item item = new Item(text);
+    Item item = new Item(text, dateFormatted());
     int savedItemId = await db.saveItem(item);
     Item addedItem = await db.getItem(savedItemId);
 
@@ -84,6 +85,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
                   elevation: 0,
                   child: ListTile(
                     title: _itemList[index],
+                    subtitle: Text(_itemList[index].dateCreated),
                     leading: IconButton(
                       icon: Icon(
                         Icons.check_circle_outline,
@@ -199,7 +201,12 @@ class _HomeContentPageState extends State<HomeContentPage> {
         FlatButton(
             onPressed: () async {
               Item newItemUpdated = Item.fromMap(
-                  {"itemName": _textEditingController.text, "id": item.id});
+                {
+                  "itemName": _textEditingController.text,
+                  "dateCreated": dateFormatted(),
+                  "id": item.id
+                },
+              );
 
               _handleSubmittedUpdate(index, item);
               await db.updateItem(newItemUpdated);
