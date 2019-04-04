@@ -18,10 +18,16 @@ dependencies:
   path_provider: ^0.5.0+1
   intl: ^0.15.7
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.0
 
+flutter_icons:
+  image_path: assets/DoneLogo.png
+  android: true
+  ios: true
 
 
 flutter:
@@ -32,6 +38,7 @@ flutter:
  
   assets:
     - assets/box.png
+    - assets/DoneLogo.png
    # - images/a_dot_ham.jpeg
 
   fonts:

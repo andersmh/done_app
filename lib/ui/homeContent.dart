@@ -114,40 +114,44 @@ class _HomeContentPageState extends State<HomeContentPage> {
                     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
                     itemCount: _categoryList.length,
                     itemBuilder: (_, int index) {
-                      return Container(
-                        width: 250.0,
-                        height: 250.0,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-                        child: DecoratedBox(
-                          decoration: new BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            gradient: new LinearGradient(
-                              begin: FractionalOffset.topLeft,
-                              end: FractionalOffset.bottomCenter,
-                              colors: [
-                                const Color(0xff007ECE),
-                                const Color(0xffC418F7),
-                              ],
+                      return GestureDetector(
+                        onLongPress: () =>
+                            _updateCategoryForm(_categoryList[index], index),
+                        child: Container(
+                          width: 250.0,
+                          height: 250.0,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 25),
+                          child: DecoratedBox(
+                            decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              gradient: new LinearGradient(
+                                begin: FractionalOffset.topLeft,
+                                end: FractionalOffset.bottomCenter,
+                                colors: [
+                                  const Color(0xff007ECE),
+                                  const Color(0xffC418F7),
+                                ],
+                              ),
                             ),
-                          ),
-                          child: Center(
-                            child: Wrap(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 30),
-                                  child: Text(
-                                    _categoryList[index].categoryName,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontFamily: 'Futura',
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
+                            child: Center(
+                              child: Wrap(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 30),
+                                    child: Text(
+                                      _categoryList[index].categoryName,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: 'Futura',
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -525,6 +529,19 @@ class _HomeContentPageState extends State<HomeContentPage> {
         ],
       ),
       actions: <Widget>[
+        FlatButton(
+          onPressed: () {
+            _deleteListCategory(_categoryList[index].id, index);
+            Navigator.pop(context);
+          },
+          child: Text(
+            "Delete",
+            style: TextStyle(
+              color: Colors.red,
+              fontFamily: 'Futura',
+            ),
+          ),
+        ),
         FlatButton(
           onPressed: () => Navigator.pop(context),
           child: Text(
