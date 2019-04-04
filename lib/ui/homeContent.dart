@@ -14,12 +14,13 @@ class _HomeContentPageState extends State<HomeContentPage> {
 
   @override
   void initState() {
-    _readNoDoList();
+    _pressed = false;
+    _readItemList();
   }
 
   void _handleSubmitted(String text) async {
-    Item noDoItem = new Item(text);
-    int savedItemId = await db.saveItem(noDoItem);
+    Item item = new Item(text);
+    int savedItemId = await db.saveItem(item);
     Item addedItem = await db.getItem(savedItemId);
 
     setState(() {
@@ -34,21 +35,48 @@ class _HomeContentPageState extends State<HomeContentPage> {
       body: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.symmetric(vertical: 20.0),
-            height: 220,
             color: Color(0xFF020E38),
+            child: Container(
+              height: 110.0,
+              width: 1000,
+              decoration: new BoxDecoration(
+                color: Colors.white,
+                borderRadius:
+                    new BorderRadius.only(bottomLeft: Radius.circular(70)),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+                child: Text(
+                  "Tasks.",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 70,
+                    fontFamily: 'Futura',
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            height: 220,
+            decoration: BoxDecoration(
+              color: Color(0xFF020E38),
+              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(70)),
+            ),
             child: ListView(
               scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
               children: <Widget>[
-                myCategory('Physics\nAssignment'),
-                myCategory('Reparing\nThe\nCar'),
-                myCategory('Dinne\ningrediens'),
+                myCategory('Physics Assignemt Questions'),
+                myCategory('Clean The House Tasks By Room'),
+                myCategory('Fix The Car One Part At The Time'),
+                myCategory('Countrys To Visit Before I Die'),
               ],
             ),
           ),
           Flexible(
             child: ListView.builder(
-              padding: EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(1),
               reverse: false,
               itemCount: _itemList.length,
               itemBuilder: (_, int index) {
@@ -57,12 +85,20 @@ class _HomeContentPageState extends State<HomeContentPage> {
                   elevation: 0,
                   child: ListTile(
                     title: _itemList[index],
+                    leading: IconButton(
+                      icon: Icon(
+                        Icons.check_circle_outline,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {},
+                    ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 5),
                     onLongPress: () => _updateItem(_itemList[index], index),
                     trailing: Listener(
                       key: Key(_itemList[index].itemName),
-                      child: Icon(Icons.remove_circle, color: Colors.redAccent),
+                      child: Icon(Icons.delete, color: Colors.black),
                       onPointerDown: (pointerEvent) =>
-                          _deleteNoDo(_itemList[index].id, index),
+                          _deleteListItem(_itemList[index].id, index),
                     ),
                   ),
                 );
@@ -106,7 +142,9 @@ class _HomeContentPageState extends State<HomeContentPage> {
       actions: <Widget>[
         FlatButton(
           onPressed: () {
-            _handleSubmitted(_textEditingController.text);
+            if (_textEditingController.text != '') {
+              _handleSubmitted(_textEditingController.text);
+            }
             _textEditingController.clear();
             Navigator.pop(context);
           },
@@ -125,7 +163,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
         });
   }
 
-  _readNoDoList() async {
+  _readItemList() async {
     List items = await db.getAllItems();
     items.forEach((item) {
       setState(() {
@@ -134,7 +172,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
     });
   }
 
-  _deleteNoDo(int id, int index) async {
+  _deleteListItem(int id, int index) async {
     await db.deleteItem(id);
     setState(() {
       _itemList.removeAt(index);
@@ -167,7 +205,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
               _handleSubmittedUpdate(index, item);
               await db.updateItem(newItemUpdated);
               setState(() {
-                _readNoDoList();
+                _readItemList();
               });
               Navigator.pop(context);
             },
@@ -193,16 +231,14 @@ class _HomeContentPageState extends State<HomeContentPage> {
     });
   }
 
-//#C418F7 pink
-//#007ECE blue
   Container myCategory(String categoryName) {
     return Container(
       width: 250.0,
       height: 250.0,
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
       child: DecoratedBox(
         decoration: new BoxDecoration(
-          borderRadius: BorderRadius.circular(40),
+          borderRadius: BorderRadius.circular(50),
           gradient: new LinearGradient(
             begin: FractionalOffset.topLeft,
             end: FractionalOffset.bottomCenter,
@@ -214,19 +250,18 @@ class _HomeContentPageState extends State<HomeContentPage> {
         ),
         child: Wrap(
           children: <Widget>[
-            SizedBox(
-              height: 40,
-              width: 40,
-            ),
-            Text(
-              categoryName,
-              style: TextStyle(
-                fontSize: 20,
-                fontFamily: 'Futura',
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              child: Text(
+                categoryName,
+                style: TextStyle(
+                  fontSize: 25,
+                  fontFamily: 'Futura',
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
-            )
+            ),
           ],
         ),
       ),
