@@ -1,6 +1,7 @@
 import '../model/item.dart';
 import '../util/database_client.dart';
 import '../util/date_formatter.dart';
+import '../model/category.dart';
 import 'package:flutter/material.dart';
 
 class HomeContentPage extends StatefulWidget {
@@ -12,6 +13,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
   final _textEditingController = new TextEditingController();
   var db = new DatabaseHelper();
   final List<Item> _itemList = <Item>[];
+  final List<Category> _categoryList = <Category>[];
 
   @override
   void initState() {
@@ -32,6 +34,16 @@ class _HomeContentPageState extends State<HomeContentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showFormDialog,
+        tooltip: "Add Task",
+        backgroundColor: Color(0xff020E38),
+        child: ListTile(
+          title: Icon(
+            Icons.add,
+          ),
+        ),
+      ),
       body: Column(
         children: <Widget>[
           Container(
@@ -61,65 +73,91 @@ class _HomeContentPageState extends State<HomeContentPage> {
             height: 220,
             decoration: BoxDecoration(
               color: Color(0xFF020E38),
-              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(70)),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(70),
+              ),
             ),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
-              children: <Widget>[
-                myCategory('Physics Assignemt Questions'),
-                myCategory('Clean The House Tasks By Room'),
-                myCategory('Fix The Car One Part At The Time'),
-                myCategory('Countrys To Visit Before I Die'),
-              ],
-            ),
+            child: _categoryList.isEmpty
+                ? Container(
+                    height: 10000,
+                    width: 10000,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 25,
+                      vertical: 60,
+                    ),
+                    child: Text(
+                      'Empty.',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 70,
+                        fontFamily: 'Futura',
+                      ),
+                    ),
+                  )
+                : ListView(
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+                    children: <Widget>[
+                      myCategory('Physics Assignemt Questions'),
+                      myCategory('Clean The House Tasks By Room'),
+                      myCategory('Fix The Car One Part At The Time'),
+                      myCategory('Countrys To Visit Before I Die'),
+                    ],
+                  ),
           ),
           Flexible(
-            child: ListView.builder(
-              padding: EdgeInsets.all(1),
-              reverse: false,
-              itemCount: _itemList.length,
-              itemBuilder: (_, int index) {
-                return Card(
-                  color: Colors.white,
-                  elevation: 0,
-                  child: ListTile(
-                    title: _itemList[index],
-                    subtitle: Text(_itemList[index].dateCreated),
-                    leading: IconButton(
-                      icon: Icon(
-                        Icons.check_circle_outline,
+            child: _itemList.isEmpty
+                ? Container(
+                    width: 10000,
+                    height: 10000,
+                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                    child: Text(
+                      'Empty.',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
                         color: Colors.black,
+                        fontSize: 70,
+                        fontFamily: 'Futura',
                       ),
-                      onPressed: () {},
                     ),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 5),
-                    onLongPress: () => _updateItem(_itemList[index], index),
-                    trailing: Listener(
-                      key: Key(_itemList[index].itemName),
-                      child: Icon(Icons.delete, color: Colors.black),
-                      onPointerDown: (pointerEvent) =>
-                          _deleteListItem(_itemList[index].id, index),
-                    ),
+                  )
+                : ListView.builder(
+                    padding: EdgeInsets.all(1),
+                    reverse: false,
+                    itemCount: _itemList.length,
+                    itemBuilder: (_, int index) {
+                      return Card(
+                        color: Colors.white,
+                        elevation: 0,
+                        child: ListTile(
+                          title: _itemList[index],
+                          subtitle: Text(_itemList[index].dateCreated),
+                          leading: IconButton(
+                            icon: Icon(
+                              Icons.check_circle_outline,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {},
+                          ),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                          onLongPress: () =>
+                              _updateItem(_itemList[index], index),
+                          trailing: Listener(
+                            key: Key(_itemList[index].itemName),
+                            child: Icon(Icons.delete, color: Colors.black),
+                            onPointerDown: (pointerEvent) =>
+                                _deleteListItem(_itemList[index].id, index),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
           Divider(
             height: 1.0,
           )
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showFormDialog,
-        tooltip: "Add Task",
-        backgroundColor: Color(0xff020E38),
-        child: ListTile(
-          title: Icon(
-            Icons.add,
-          ),
-        ),
       ),
     );
   }
@@ -269,6 +307,27 @@ class _HomeContentPageState extends State<HomeContentPage> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Container myCategoryAdd() {
+    return Container(
+      width: 250.0,
+      height: 250.0,
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
+      child: DecoratedBox(
+        decoration: new BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          gradient: new LinearGradient(
+            begin: FractionalOffset.topLeft,
+            end: FractionalOffset.bottomCenter,
+            colors: [
+              const Color(0xff007ECE),
+              const Color(0xffC418F7),
+            ],
+          ),
         ),
       ),
     );
