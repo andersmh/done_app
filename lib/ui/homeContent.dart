@@ -14,7 +14,6 @@ class _HomeContentPageState extends State<HomeContentPage> {
 
   @override
   void initState() {
-    _pressed = false;
     _readItemList();
   }
 

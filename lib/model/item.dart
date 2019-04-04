@@ -25,7 +25,9 @@ class Item extends StatelessWidget {
     this._id = map["id"];
   }
 
-  String get itemName => _itemName;
+  String get itemName {
+    _itemName;
+  }
 
   set itemName(String value) {
     _itemName = value;
@@ -40,7 +42,7 @@ class Item extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(6.0),
+      margin: EdgeInsets.all(0.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
