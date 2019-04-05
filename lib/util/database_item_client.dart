@@ -5,15 +5,15 @@ import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DatabaseHelper {
+class DatabaseItemHelper {
   static const String tableName = "table_items";
   static const String columnId = "id";
   static const String columnItemName = "item_name";
   static const String columnDateCreated = "date_created";
 
-  static final DatabaseHelper _instance = new DatabaseHelper.internal();
+  static final DatabaseItemHelper _instance = new DatabaseItemHelper.internal();
 
-  factory DatabaseHelper() => _instance;
+  factory DatabaseItemHelper() => _instance;
   static Database _db;
 
   Future<Database> get getDb async {
@@ -24,11 +24,11 @@ class DatabaseHelper {
     return _db;
   }
 
-  DatabaseHelper.internal();
+  DatabaseItemHelper.internal();
 
   initDb() async {
     Directory directory = await getApplicationDocumentsDirectory();
-    String path = join(directory.path, "tasks_db.db");
+    String path = join(directory.path, "task_db.db");
     var dbCreated = await openDatabase(path, version: 1, onCreate: _onCreate);
     return dbCreated;
   }

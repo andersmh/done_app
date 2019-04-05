@@ -13,8 +13,8 @@ class HomeContentPage extends StatefulWidget {
 
 class _HomeContentPageState extends State<HomeContentPage> {
   final TextEditingController itemController = new TextEditingController();
-  var dbi = new DatabaseHelper();
-  var dbc = new DatabaseHelperCategory();
+  var dbi = new DatabaseItemHelper();
+  var dbc = new DatabaseCategoryHelper();
   final List<Item> _itemList = <Item>[];
   final List<Category> _categoryList = <Category>[];
 
@@ -218,7 +218,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
   }
 
   _readCategoryList() async {
-    List categorys = await dbc.getAllCategorys();
+    List categorys = await dbc.getCategorys();
     categorys.forEach((category) {
       setState(() {
         _categoryList.add(Category.map(category));
@@ -498,6 +498,8 @@ class _HomeContentPageState extends State<HomeContentPage> {
   }
 
   _updateCategoryForm(Category category, int index) {
+    itemController.text = category.categoryName;
+
     var alert = AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       backgroundColor: Color(0xFF020E38),
@@ -562,10 +564,32 @@ class _HomeContentPageState extends State<HomeContentPage> {
             ),
           ),
         ),
+
+        /*
+Item newItemUpdated = Item.fromMap(
+                {
+                  "item_name": itemController.text,
+                  "date_created": dateFormatted(),
+                  "id": item.id
+                },
+              );
+
+              _handleSubmittedUpdateItem(index, item);
+              await dbi.updateItem(newItemUpdated);
+              setState(() {
+                _readItemList();
+              });
+
+              itemController.clear();
+              Navigator.pop(context);
+        */
         FlatButton(
             onPressed: () async {
               Category newCategoryUpdated = Category.fromMap(
-                {"categoryName": itemController.text, "id": category.id},
+                {
+                  "category_name": itemController.text,
+                  "id": category.id,
+                },
               );
 
               _handleSubmittedUpdatedCategory(index, category);
@@ -574,7 +598,6 @@ class _HomeContentPageState extends State<HomeContentPage> {
                 _readCategoryList();
               });
               itemController.clear();
-
               Navigator.pop(context);
             },
             child: Text(
@@ -606,7 +629,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
   void _handleSubmittedUpdatedCategory(int index, Category category) {
     setState(() {
       _categoryList.removeWhere((element) {
-        _categoryList[index].categoryName = category.categoryName;
+        //  _categoryList[index].categoryName = category.categoryName;
       });
     });
   }

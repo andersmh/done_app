@@ -67,7 +67,7 @@ class Item extends StatelessWidget {
   }
 
   void deleteItem(int id) async {
-    DatabaseHelper db = new DatabaseHelper();
+    DatabaseItemHelper db = new DatabaseItemHelper();
     int rowsDeleted = await db.deleteItem(id);
     print(rowsDeleted);
   }

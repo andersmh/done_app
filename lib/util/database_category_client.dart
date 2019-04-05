@@ -1,23 +1,21 @@
 import 'dart:io';
-
 import '../model/category.dart';
 import 'package:path/path.dart';
+import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DatabaseHelperCategory {
-  static final DatabaseHelperCategory _instance =
-      new DatabaseHelperCategory.internal();
-
-  factory DatabaseHelperCategory() => _instance;
-
-  final String tableName = "category";
+class DatabaseCategoryHelper {
+  final String tableName = "table_category";
   final String columnId = "id";
-  final String columnCategoryName = "categoryName";
+  static const String columnCategoryName = "category_name";
 
+  static final DatabaseCategoryHelper _instance =
+      new DatabaseCategoryHelper.internal();
+  factory DatabaseCategoryHelper() => _instance;
   static Database _db;
 
-  Future<Database> get db async {
+  Future<Database> get getDb async {
     if (_db != null) {
       return _db;
     }
@@ -26,63 +24,65 @@ class DatabaseHelperCategory {
     return _db;
   }
 
-  DatabaseHelperCategory.internal();
+  DatabaseCategoryHelper.internal();
 
   initDb() async {
-    Directory documentDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentDirectory.path, "categorydb.db");
-
-    var ourDb = await openDatabase(path, version: 1, onCreate: _onCreate);
-    print(documentDirectory);
-    print(path);
-    return ourDb;
+    Directory directory = await getApplicationDocumentsDirectory();
+    String path = join(directory.path, "cat_db.db");
+    var dbCreated = await openDatabase(path, version: 1, onCreate: _onCreate);
+    return dbCreated;
   }
 
-  void _onCreate(Database db, int newVersion) async {
-    await db.execute(
-        "CREATE TABLE $tableName($columnId INTEGER PRIMARY KEY, $columnCategoryName TEXT)");
+  void _onCreate(Database db, int version) async {
+    await db.execute("CREATE TABLE $tableName("
+        "$columnId INTEGER PRIMARY KEY, "
+        "$columnCategoryName TEXT);");
   }
 
   Future<int> saveCategory(Category category) async {
-    var dbClient = await db;
-    int res = await dbClient.insert("category", category.toMap());
-    return res;
+    var dbClient = await getDb;
+    int rowsSaved = await dbClient.insert(tableName, category.toMap());
+    return rowsSaved;
   }
 
-  Future<List<Map<String, dynamic>>> getAllCategorys() async {
-    var dbClient = await db;
-    return await dbClient.query(tableName);
+  Future<List> getCategorys() async {
+    var dbClient = await getDb;
+    var result = await dbClient.rawQuery("SELECT * FROM $tableName");
+    return result.toList();
   }
 
   Future<int> getCount() async {
-    var dbClient = await db;
-    return Sqflite.firstIntValue(await dbClient.rawQuery('''
-          SELECT COUNT(*) FROM $tableName ORDER BY $columnCategoryName ASC
-        '''));
+    var dbClient = await getDb;
+    return Sqflite.firstIntValue(
+        await dbClient.rawQuery("SELECT COUNT (*) FROM $tableName"));
   }
 
-  Future<Category> getCategory(int id) async {
-    var dbClient = await db;
-    List<Map> res = await dbClient
-        .rawQuery("SELECT * FROM $tableName WHERE $columnId = $id");
-    if (res.length == 0) return null;
-    return new Category.fromMap(res.first);
+  Future<Category> getCategory(int categoryId) async {
+    var dbClient = await getDb;
+    var category = await dbClient
+        .rawQuery("SELECT * FROM ${tableName} WHERE $columnId=$categoryId");
+    if (category.length == 0) return null;
+    return new Category.fromMap(category.first);
   }
 
   Future<int> deleteCategory(int id) async {
-    var dbClient = await db;
-    return await dbClient
-        .delete("$tableName", where: "$columnId = ?", whereArgs: [id]);
+    var db = await getDb;
+    int rowsDeleted =
+        await db.delete(tableName, where: "$columnId = ?", whereArgs: [id]);
+    return rowsDeleted;
   }
 
   Future<int> updateCategory(Category category) async {
-    var dbClient = await db;
-    return await dbClient.update(tableName, category.toMap(),
-        where: "$columnId = ?", whereArgs: [category.id]);
+    int id = category.id;
+    print("id of the category is $id");
+    var db = await getDb;
+    int rowsUpdated = await db.update("$tableName", category.toMap(),
+        where: "$columnId  = ?", whereArgs: [category.id]);
+    return rowsUpdated;
   }
 
   Future close() async {
-    var dbClient = await db;
-    return dbClient.close();
+    var dbClient = await getDb;
+    dbClient.close();
   }
 }
