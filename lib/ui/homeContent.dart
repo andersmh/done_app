@@ -464,8 +464,8 @@ class _HomeContentPageState extends State<HomeContentPage> {
             onPressed: () async {
               Item newItemUpdated = Item.fromMap(
                 {
-                  "itemName": itemController.text,
-                  "dateCreated": dateFormatted(),
+                  "item_name": itemController.text,
+                  "date_created": dateFormatted(),
                   "id": item.id
                 },
               );
@@ -598,7 +598,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
   void _handleSubmittedUpdateItem(int index, Item item) {
     setState(() {
       _itemList.removeWhere((element) {
-        _itemList[index].itemName = item.itemName;
+        //   _itemList[index].itemName = item.itemName;
       });
     });
   }
