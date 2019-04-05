@@ -12,7 +12,7 @@ class HomeContentPage extends StatefulWidget {
 }
 
 class _HomeContentPageState extends State<HomeContentPage> {
-  final _textEditingController = new TextEditingController();
+  final TextEditingController itemController = new TextEditingController();
   var dbi = new DatabaseHelper();
   var dbc = new DatabaseHelperCategory();
   final List<Item> _itemList = <Item>[];
@@ -28,24 +28,10 @@ class _HomeContentPageState extends State<HomeContentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      floatingActionButton: Row(
+      floatingActionButton: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          FloatingActionButton(
-            heroTag: null,
-            elevation: 0,
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            onPressed: _addTaskForm,
-            backgroundColor: Color(0xff020E38),
-          ),
-          SizedBox(
-            height: 30,
-            width: 10,
-          ),
           FloatingActionButton(
             heroTag: null,
             elevation: 0,
@@ -54,6 +40,20 @@ class _HomeContentPageState extends State<HomeContentPage> {
               color: Colors.white,
             ),
             onPressed: _addCategoryForm,
+            backgroundColor: Color(0xff020E38),
+          ),
+          SizedBox(
+            height: 10,
+            width: 10,
+          ),
+          FloatingActionButton(
+            heroTag: null,
+            elevation: 0,
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            onPressed: _addTaskForm,
             backgroundColor: Color(0xff020E38),
           ),
         ],
@@ -195,12 +195,6 @@ class _HomeContentPageState extends State<HomeContentPage> {
                           contentPadding: EdgeInsets.symmetric(horizontal: 5),
                           onLongPress: () =>
                               _updateTaskForm(_itemList[index], index),
-                          trailing: Listener(
-                            key: Key(_itemList[index].itemName),
-                            child: Icon(Icons.delete, color: Colors.black),
-                            onPointerDown: (pointerEvent) =>
-                                _deleteListItem(_itemList[index].id, index),
-                          ),
                         ),
                       );
                     },
@@ -266,7 +260,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
           Expanded(
             child: TextField(
               style: new TextStyle(color: Colors.white, fontFamily: 'Futura'),
-              controller: _textEditingController,
+              controller: itemController,
               autofocus: true,
               decoration: InputDecoration(
                 hintText: "Task description here",
@@ -300,10 +294,10 @@ class _HomeContentPageState extends State<HomeContentPage> {
         ),
         FlatButton(
           onPressed: () {
-            if (_textEditingController.text != '') {
-              _handleSubmittedItem(_textEditingController.text);
+            if (itemController.text != '') {
+              _handleSubmittedItem(itemController.text);
             }
-            _textEditingController.clear();
+            itemController.clear();
             Navigator.pop(context);
           },
           child: Text(
@@ -343,7 +337,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
           Expanded(
             child: TextField(
               style: new TextStyle(color: Colors.white, fontFamily: 'Futura'),
-              controller: _textEditingController,
+              controller: itemController,
               autofocus: true,
               decoration: InputDecoration(
                 hintText: "Category name here",
@@ -377,10 +371,10 @@ class _HomeContentPageState extends State<HomeContentPage> {
         ),
         FlatButton(
           onPressed: () {
-            if (_textEditingController.text != '') {
-              _handleSubmittedCategory(_textEditingController.text);
+            if (itemController.text != '') {
+              _handleSubmittedCategory(itemController.text);
             }
-            _textEditingController.clear();
+            itemController.clear();
             Navigator.pop(context);
           },
           child: Text(
@@ -401,6 +395,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
   }
 
   _updateTaskForm(Item item, int index) {
+    itemController.text = item.itemName;
     var alert = AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       backgroundColor: Color(0xFF020E38),
@@ -420,7 +415,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
           Expanded(
             child: TextField(
               style: new TextStyle(color: Colors.white, fontFamily: 'Futura'),
-              controller: _textEditingController,
+              controller: itemController,
               autofocus: true,
               decoration: InputDecoration(
                 hintText: "Task description here",
@@ -443,6 +438,19 @@ class _HomeContentPageState extends State<HomeContentPage> {
       ),
       actions: <Widget>[
         FlatButton(
+          onPressed: () {
+            _deleteListItem(item.id, index);
+            Navigator.pop(context);
+          },
+          child: Text(
+            "Delete",
+            style: TextStyle(
+              color: Colors.red,
+              fontFamily: 'Futura',
+            ),
+          ),
+        ),
+        FlatButton(
           onPressed: () => Navigator.pop(context),
           child: Text(
             "Cancel",
@@ -456,7 +464,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
             onPressed: () async {
               Item newItemUpdated = Item.fromMap(
                 {
-                  "itemName": _textEditingController.text,
+                  "itemName": itemController.text,
                   "dateCreated": dateFormatted(),
                   "id": item.id
                 },
@@ -467,6 +475,8 @@ class _HomeContentPageState extends State<HomeContentPage> {
               setState(() {
                 _readItemList();
               });
+
+              itemController.clear();
               Navigator.pop(context);
             },
             child: Text(
@@ -507,7 +517,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
           Expanded(
             child: TextField(
               style: new TextStyle(color: Colors.white, fontFamily: 'Futura'),
-              controller: _textEditingController,
+              controller: itemController,
               autofocus: true,
               decoration: InputDecoration(
                 hintText: "Category name here",
@@ -531,7 +541,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
       actions: <Widget>[
         FlatButton(
           onPressed: () {
-            _deleteListCategory(_categoryList[index].id, index);
+            _deleteListCategory(category.id, index);
             Navigator.pop(context);
           },
           child: Text(
@@ -555,10 +565,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
         FlatButton(
             onPressed: () async {
               Category newCategoryUpdated = Category.fromMap(
-                {
-                  "categoryName": _textEditingController.text,
-                  "id": category.id
-                },
+                {"categoryName": itemController.text, "id": category.id},
               );
 
               _handleSubmittedUpdatedCategory(index, category);
@@ -566,6 +573,8 @@ class _HomeContentPageState extends State<HomeContentPage> {
               setState(() {
                 _readCategoryList();
               });
+              itemController.clear();
+
               Navigator.pop(context);
             },
             child: Text(
