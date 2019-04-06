@@ -141,7 +141,7 @@ class _HomeState extends State<Home> {
                           ),
                           child: DecoratedBox(
                             decoration: new BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
+                              borderRadius: BorderRadius.circular(70),
                               gradient: new LinearGradient(
                                 begin: FractionalOffset.topLeft,
                                 end: FractionalOffset.bottomCenter,
