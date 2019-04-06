@@ -117,10 +117,14 @@ class _HomeState extends State<Home> {
                     itemBuilder: (_, int index) {
                       return GestureDetector(
                         onTap: () {
+                          print("Just tapped: " +
+                              _categoryList[index].id.toString());
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => CategoryPage()),
+                              builder: (context) =>
+                                  CategoryPage(_categoryList[index]),
+                            ),
                           );
                         },
                         onLongPress: () =>
