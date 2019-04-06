@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../util/database_category_item_client.dart';
+import '../model/category_item.dart';
 import '../model/category.dart';
+import '../util/date_formatter.dart';
 
 class CategoryPage extends StatefulWidget {
   final Category categoryObject;
@@ -10,6 +13,15 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
+  final TextEditingController itemController = new TextEditingController();
+  var dbci = new DatabaseCategoryItemHelper();
+  final List<CategoryItem> _categoryItemList = <CategoryItem>[];
+
+  @override
+  void initState() {
+    _readCategoryItemList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,63 +33,138 @@ class _CategoryPageState extends State<CategoryPage> {
           Icons.add,
           color: Colors.white,
         ),
-        onPressed: () {},
+        onPressed: () {
+          _addCategoryItemForm();
+        },
         backgroundColor: Color(0xff020E38),
       ),
-      body: Column(children: <Widget>[
-        Container(
-          color: Color(0xFF020E38),
-          child: Container(
-            height: 140.0,
+      body: Column(
+        children: <Widget>[
+          Container(
+            color: Color(0xFF020E38),
+            child: Container(
+              height: 140.0,
+              width: 1000,
+              decoration: new BoxDecoration(
+                color: Colors.white,
+                borderRadius:
+                    new BorderRadius.only(bottomLeft: Radius.circular(70)),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 40),
+                child: Text(
+                  "Tasks.",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 70,
+                    fontFamily: 'Futura',
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            height: 140,
             width: 1000,
-            decoration: new BoxDecoration(
-              color: Colors.white,
-              borderRadius:
-                  new BorderRadius.only(bottomLeft: Radius.circular(70)),
+            decoration: BoxDecoration(
+              color: Color(0xFF020E38),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(70),
+              ),
             ),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 40),
+              padding: EdgeInsets.symmetric(
+                horizontal: 40,
+                vertical: 30,
+              ),
               child: Text(
-                "Tasks.",
+                widget.categoryObject.categoryName,
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontSize: 70,
                   fontFamily: 'Futura',
                 ),
               ),
             ),
           ),
-        ),
-        Container(
-          height: 140,
-          width: 1000,
-          decoration: BoxDecoration(
-            color: Color(0xFF020E38),
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(70),
-            ),
+          Flexible(
+            child: _categoryItemList.isEmpty
+                ? Container(
+                    width: 10000,
+                    height: 10000,
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                    child: Text(
+                      'Empty.',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 70,
+                        fontFamily: 'Futura',
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    padding: EdgeInsets.all(1),
+                    reverse: false,
+                    itemCount: _categoryItemList.length,
+                    itemBuilder: (_, int index) {
+                      return Card(
+                        color: Colors.white,
+                        elevation: 0,
+                        child: ListTile(
+                          title: _categoryItemList[index],
+                          subtitle: Text(_categoryItemList[index].dateCreated),
+                          leading: IconButton(
+                            icon: _categoryItemList[index].categoryItemDone == 0
+                                ? Icon(
+                                    Icons.check_circle_outline,
+                                    color: Colors.black,
+                                  )
+                                : Icon(
+                                    Icons.check_circle,
+                                    color: Colors.purple,
+                                  ),
+                            onPressed: () async {
+                              if (_categoryItemList[index].categoryItemDone ==
+                                  0) {
+                                CategoryItem newItem = _categoryItemList[index];
+                                CategoryItem oldItem = _categoryItemList[index];
+                                newItem.categoryItemDone = 1;
+                                _handleSubmittedUpdateCategoryItem(
+                                    index, oldItem);
+                                await dbci.updateCategoryItem(newItem);
+                                setState(() {
+                                  _readCategoryItemList();
+                                });
+                              } else {
+                                CategoryItem newItem = _categoryItemList[index];
+                                CategoryItem oldItem = _categoryItemList[index];
+
+                                newItem.categoryItemDone = 0;
+                                await dbci.updateCategoryItem(newItem);
+                                _handleSubmittedUpdateCategoryItem(
+                                    index, oldItem);
+                                setState(() {
+                                  _readCategoryItemList();
+                                });
+                              }
+                              // print(_itemList[index].itemDone);
+                            },
+                          ),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                          onLongPress: () => _updateCategoryItemForm(
+                              _categoryItemList[index], index),
+                        ),
+                      );
+                    },
+                  ),
           ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 40,
-              vertical: 30,
-            ),
-            child: Text(
-              widget.categoryObject.categoryName,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 70,
-                fontFamily: 'Futura',
-              ),
-            ),
-          ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 
-/*
-void _addTaskForm() {
+  void _addCategoryItemForm() {
     var alert = AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       backgroundColor: Color(0xFF020E38),
@@ -132,7 +219,7 @@ void _addTaskForm() {
         FlatButton(
           onPressed: () {
             if (itemController.text != '') {
-              _handleSubmittedItem(itemController.text);
+              _handleSubmittedCategoryItem(itemController.text);
             }
             itemController.clear();
             Navigator.pop(context);
@@ -153,11 +240,9 @@ void _addTaskForm() {
           return alert;
         });
   }
-*/
 
-  /*
-   _updateTaskForm(Item item, int index) {
-    itemController.text = item.itemName;
+  _updateCategoryItemForm(CategoryItem item, int index) {
+    itemController.text = item.categoryItemName;
     var alert = AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       backgroundColor: Color(0xFF020E38),
@@ -201,7 +286,7 @@ void _addTaskForm() {
       actions: <Widget>[
         FlatButton(
           onPressed: () {
-            _deleteListItem(item.id, index);
+            _deleteListCategoryItem(item.id, index);
             Navigator.pop(context);
           },
           child: Text(
@@ -224,20 +309,21 @@ void _addTaskForm() {
         ),
         FlatButton(
             onPressed: () async {
-              Item newItemUpdated = Item.fromMap(
+              CategoryItem newItemUpdated = CategoryItem.fromMap(
                 {
-                  "item_name": itemController.text,
+                  "category_item_name": itemController.text,
                   "date_created": dateFormatted(),
                   //Kan være problemet med denne under
-                  "item_done": item.itemDone,
+                  "category_item_done": item.categoryItemDone,
+                  "category_nr": widget.categoryObject.id,
                   "id": item.id
                 },
               );
 
-              _handleSubmittedUpdateItem(index, item);
-              await dbi.updateItem(newItemUpdated);
+              _handleSubmittedUpdateCategoryItem(index, item);
+              await dbci.updateCategoryItem(newItemUpdated);
               setState(() {
-                _readItemList();
+                _readCategoryItemList();
               });
 
               itemController.clear();
@@ -260,48 +346,39 @@ void _addTaskForm() {
       },
     );
   }
-  */
 
-  /*
- _deleteListItem(int id, int index) async {
-    await dbi.deleteItem(id);
+  _deleteListCategoryItem(int id, int index) async {
+    await dbci.deleteCategoryItem(id);
     setState(() {
-      _itemList.removeAt(index);
+      _categoryItemList.removeAt(index);
     });
   }
-  */
 
-/*
- _readItemList() async {
-    List items = await dbi.getItems();
+  _readCategoryItemList() async {
+    List items = await dbci.getCategoryItems(widget.categoryObject.id);
     items.forEach((item) {
       setState(() {
-        _itemList.add(Item.map(item));
+        _categoryItemList.add(CategoryItem.map(item));
       });
     });
   }
-*/
 
-/*
-void _handleSubmittedUpdateItem(int index, Item item) {
+  void _handleSubmittedUpdateCategoryItem(int index, CategoryItem item) {
     setState(() {
-      _itemList.removeWhere((element) {
+      _categoryItemList.removeWhere((element) {
         //   _itemList[index].itemName = item.itemName;
       });
     });
   }
-*/
 
-/*
-void _handleSubmittedItem(String text) async {
-    Item item = new Item(text, dateFormatted());
-    int savedItemId = await dbi.saveItem(item);
-    Item addedItem = await dbi.getItem(savedItemId);
+  void _handleSubmittedCategoryItem(String text) async {
+    CategoryItem item =
+        new CategoryItem(text, dateFormatted(), widget.categoryObject.id);
+    int savedItemId = await dbci.saveCategoryItem(item);
+    CategoryItem addedItem = await dbci.getCategoryItem(savedItemId);
 
     setState(() {
-      _itemList.insert(0, addedItem);
+      _categoryItemList.insert(0, addedItem);
     });
   }
-*/
-
 }
