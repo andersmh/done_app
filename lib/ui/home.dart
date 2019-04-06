@@ -605,25 +605,6 @@ class _HomeState extends State<Home> {
             ),
           ),
         ),
-
-        /*
-Item newItemUpdated = Item.fromMap(
-                {
-                  "item_name": itemController.text,
-                  "date_created": dateFormatted(),
-                  "id": item.id
-                },
-              );
-
-              _handleSubmittedUpdateItem(index, item);
-              await dbi.updateItem(newItemUpdated);
-              setState(() {
-                _readItemList();
-              });
-
-              itemController.clear();
-              Navigator.pop(context);
-        */
         FlatButton(
             onPressed: () async {
               Category newCategoryUpdated = Category.fromMap(
