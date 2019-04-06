@@ -150,8 +150,7 @@ class _HomeState extends State<Home> {
                               child: Wrap(
                                 children: <Widget>[
                                   Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 30),
+                                    padding: EdgeInsets.all(20),
                                     child: Text(
                                       _categoryList[index].categoryName,
                                       style: TextStyle(
