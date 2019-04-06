@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../model/category.dart';
 
 class CategoryPage extends StatefulWidget {
-  final Category category;
-  CategoryPage(this.category);
+  final Category categoryObject;
+  const CategoryPage(this.categoryObject);
   @override
   _CategoryPageState createState() => _CategoryPageState();
 }
@@ -50,13 +50,28 @@ class _CategoryPageState extends State<CategoryPage> {
         ),
         Container(
           height: 140,
+          width: 1000,
           decoration: BoxDecoration(
             color: Color(0xFF020E38),
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(70),
             ),
           ),
-        )
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 40,
+              vertical: 30,
+            ),
+            child: Text(
+              widget.categoryObject.categoryName,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 70,
+                fontFamily: 'Futura',
+              ),
+            ),
+          ),
+        ),
       ]),
     );
   }
