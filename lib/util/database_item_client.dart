@@ -10,6 +10,7 @@ class DatabaseItemHelper {
   static const String columnId = "id";
   static const String columnItemName = "item_name";
   static const String columnDateCreated = "date_created";
+  static const String columnItemDone = "item_done";
 
   static final DatabaseItemHelper _instance = new DatabaseItemHelper.internal();
 
@@ -28,7 +29,7 @@ class DatabaseItemHelper {
 
   initDb() async {
     Directory directory = await getApplicationDocumentsDirectory();
-    String path = join(directory.path, "task_db.db");
+    String path = join(directory.path, "taske_db.db");
     var dbCreated = await openDatabase(path, version: 1, onCreate: _onCreate);
     return dbCreated;
   }
@@ -37,7 +38,8 @@ class DatabaseItemHelper {
     await db.execute("CREATE TABLE $tableName("
         "$columnId INTEGER PRIMARY KEY, "
         "$columnItemName TEXT, "
-        "$columnDateCreated TEXT);");
+        "$columnDateCreated TEXT,"
+        "$columnItemDone INTEGER);");
   }
 
   Future<int> saveItem(Item item) async {

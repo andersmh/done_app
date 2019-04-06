@@ -1,6 +1,7 @@
 import '../model/item.dart';
 import '../util/database_item_client.dart';
 import '../util/database_category_client.dart';
+import 'category.dart';
 
 import '../util/date_formatter.dart';
 import '../model/category.dart';
@@ -115,6 +116,13 @@ class _HomeState extends State<Home> {
                     itemCount: _categoryList.length,
                     itemBuilder: (_, int index) {
                       return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CategoryPage()),
+                          );
+                        },
                         onLongPress: () =>
                             _updateCategoryForm(_categoryList[index], index),
                         child: Container(
@@ -186,11 +194,38 @@ class _HomeState extends State<Home> {
                           title: _itemList[index],
                           subtitle: Text(_itemList[index].dateCreated),
                           leading: IconButton(
-                            icon: Icon(
-                              Icons.check_circle_outline,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {},
+                            icon: _itemList[index].itemDone == 0
+                                ? Icon(
+                                    Icons.check_circle_outline,
+                                    color: Colors.black,
+                                  )
+                                : Icon(
+                                    Icons.check_circle,
+                                    color: Colors.purple,
+                                  ),
+                            onPressed: () async {
+                              if (_itemList[index].itemDone == 0) {
+                                Item newItem = _itemList[index];
+                                Item oldItem = _itemList[index];
+                                newItem.itemDone = 1;
+                                _handleSubmittedUpdateItem(index, oldItem);
+                                await dbi.updateItem(newItem);
+                                setState(() {
+                                  _readItemList();
+                                });
+                              } else {
+                                Item newItem = _itemList[index];
+                                Item oldItem = _itemList[index];
+
+                                newItem.itemDone = 0;
+                                await dbi.updateItem(newItem);
+                                _handleSubmittedUpdateItem(index, oldItem);
+                                setState(() {
+                                  _readItemList();
+                                });
+                              }
+                              // print(_itemList[index].itemDone);
+                            },
                           ),
                           contentPadding: EdgeInsets.symmetric(horizontal: 5),
                           onLongPress: () =>
@@ -466,6 +501,8 @@ class _HomeState extends State<Home> {
                 {
                   "item_name": itemController.text,
                   "date_created": dateFormatted(),
+                  //Kan være problemet med denne under
+                  "item_done": item.itemDone,
                   "id": item.id
                 },
               );
