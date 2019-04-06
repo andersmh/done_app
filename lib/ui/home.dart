@@ -112,7 +112,10 @@ class _HomeState extends State<Home> {
                   )
                 : ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 0,
+                    ),
                     itemCount: _categoryList.length,
                     itemBuilder: (_, int index) {
                       return GestureDetector(
@@ -133,7 +136,9 @@ class _HomeState extends State<Home> {
                           width: 250.0,
                           height: 250.0,
                           padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 25),
+                            horizontal: 20,
+                            vertical: 25,
+                          ),
                           child: DecoratedBox(
                             decoration: new BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
