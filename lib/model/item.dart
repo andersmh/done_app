@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import '../util/database_item_client.dart';
 
@@ -67,8 +68,10 @@ class Item extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
+              AutoSizeText(
                 _itemName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: _itemDone == 0
                     ? TextStyle(
                         color: Colors.black,

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../util/database_category_item_client.dart';
@@ -78,13 +79,14 @@ class _CategoryPageState extends State<CategoryPage> {
                 horizontal: 40,
                 vertical: 30,
               ),
-              child: Text(
+              child: AutoSizeText(
                 widget.categoryObject.categoryName,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 70,
                   fontFamily: 'Futura',
                 ),
+                maxLines: 2,
               ),
             ),
           ),
