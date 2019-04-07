@@ -1,4 +1,4 @@
-# done.
+# Done.
 A beautiful task application. Designed in adobe XD. I am currently implementing it to flutter.
 </br>
 </br>
