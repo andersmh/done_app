@@ -137,9 +137,10 @@ class _CategoryPageState extends State<CategoryPage> {
                                 CategoryItem newItem = _categoryItemList[index];
                                 CategoryItem oldItem = _categoryItemList[index];
                                 newItem.categoryItemDone = 1;
+                                await dbci.updateCategoryItem(newItem);
                                 _handleSubmittedUpdateCategoryItem(
                                     index, oldItem);
-                                await dbci.updateCategoryItem(newItem);
+
                                 setState(() {
                                   _readCategoryItemList();
                                 });

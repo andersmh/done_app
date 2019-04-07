@@ -231,8 +231,8 @@ class _HomeState extends State<Home> {
                                 Item newItem = _itemList[index];
                                 Item oldItem = _itemList[index];
                                 newItem.itemDone = 1;
-                                _handleSubmittedUpdateItem(index, oldItem);
                                 await dbi.updateItem(newItem);
+                                _handleSubmittedUpdateItem(index, oldItem);
                                 setState(() {
                                   _readItemList();
                                 });
