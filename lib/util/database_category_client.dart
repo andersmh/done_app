@@ -5,6 +5,10 @@ import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
+/*
+  Auther: Anders Mæhlum Halvorsen
+*/
+
 class DatabaseCategoryHelper {
   final String tableName = "table_category";
   final String columnId = "id";

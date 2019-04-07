@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 
 import 'ui/home.dart';
 
+/*
+  Auther: Anders Mæhlum Halvorsen
+*/
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(

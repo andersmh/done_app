@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../util/database_item_client.dart';
 
+/*
+  Auther: Anders Mæhlum Halvorsen
+*/
 class CategoryItem extends StatelessWidget {
   static const String keyItemName = "category_item_name";
   static const String keyDateCreated = "date_created";

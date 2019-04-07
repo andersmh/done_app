@@ -2,6 +2,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import '../util/database_item_client.dart';
 
+/*
+  Auther: Anders Mæhlum Halvorsen
+*/
+
 class Item extends StatelessWidget {
   static const String keyItemName = "item_name";
   static const String keyDateCreated = "date_created";

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import '../util/database_category_client.dart';
 
+/*
+  Auther: Anders Mæhlum Halvorsen
+*/
+
 class Category extends StatelessWidget {
   static const String keyCategoryName = "category_name";
   static const String keyId = "id";

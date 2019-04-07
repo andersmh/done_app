@@ -6,6 +6,10 @@ import '../model/category_item.dart';
 import '../model/category.dart';
 import '../util/date_formatter.dart';
 
+/*
+  Auther: Anders Mæhlum Halvorsen
+*/
+
 class CategoryPage extends StatefulWidget {
   final Category categoryObject;
 

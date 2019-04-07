@@ -5,6 +5,10 @@ import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
+/*
+  Auther: Anders Mæhlum Halvorsen
+*/
+
 class DatabaseItemHelper {
   static const String tableName = "table_items";
   static const String columnId = "id";

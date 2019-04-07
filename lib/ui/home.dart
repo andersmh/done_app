@@ -11,6 +11,10 @@ import '../util/date_formatter.dart';
 import '../model/category.dart';
 import 'package:flutter/material.dart';
 
+/*
+  Auther: Anders Mæhlum Halvorsen
+*/
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();

@@ -6,6 +6,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import '../model/category_item.dart';
 
+/*
+  Auther: Anders Mæhlum Halvorsen
+*/
+
 class DatabaseCategoryItemHelper {
   static const String tableName = "table_category_item";
   static const String columnId = "id";
