@@ -1,7 +1,5 @@
 # Done.
-<img src="https://user-images.githubusercontent.com/31239471/55686789-dd3f6880-5965-11e9-94e0-3a8174b2ce2c.png" height="420%" width="20%"></img>
-
-A beautiful task application. Designed in adobe XD. I am currently implementing it to flutter.
+<img src="https://user-images.githubusercontent.com/31239471/55686789-dd3f6880-5965-11e9-94e0-3a8174b2ce2c.png" height="420%" width="20%"></img>A beautiful task application where you can group your tasks easily. Designed in adobe XD. I am currently implementing it to flutter.
 
 </br>
 </br>
