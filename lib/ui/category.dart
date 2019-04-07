@@ -7,6 +7,7 @@ import '../util/date_formatter.dart';
 
 class CategoryPage extends StatefulWidget {
   final Category categoryObject;
+
   const CategoryPage(this.categoryObject);
   @override
   _CategoryPageState createState() => _CategoryPageState();
@@ -33,7 +34,7 @@ class _CategoryPageState extends State<CategoryPage> {
           Icons.add,
           color: Colors.white,
         ),
-        onPressed: () {
+        onPressed: () async {
           _addCategoryItemForm();
         },
         backgroundColor: Color(0xff020E38),

@@ -50,7 +50,8 @@ class DatabaseItemHelper {
 
   Future<List> getItems() async {
     var dbClient = await getDb;
-    var result = await dbClient.rawQuery("SELECT * FROM $tableName");
+    var result = await dbClient
+        .rawQuery("SELECT * FROM $tableName ORDER BY $columnItemDone ASC");
     return result.toList();
   }
 
@@ -63,7 +64,7 @@ class DatabaseItemHelper {
   Future<Item> getItem(int itemId) async {
     var dbClient = await getDb;
     var item = await dbClient
-        .rawQuery("SELECT * FROM ${tableName} WHERE $columnId=$itemId");
+        .rawQuery("SELECT * FROM $tableName WHERE $columnId=$itemId");
     if (item.length == 0) return null;
     return new Item.fromMap(item.first);
   }

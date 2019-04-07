@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import '../model/item.dart';
 import '../util/database_item_client.dart';
 import '../util/database_category_client.dart';
 import 'category.dart';
+import '../util/database_category_item_client.dart';
+import 'package:flutter_circular_chart/flutter_circular_chart.dart';
 
 import '../util/date_formatter.dart';
 import '../model/category.dart';
@@ -16,6 +20,7 @@ class _HomeState extends State<Home> {
   final TextEditingController itemController = new TextEditingController();
   var dbi = new DatabaseItemHelper();
   var dbc = new DatabaseCategoryHelper();
+  var dbci = new DatabaseCategoryItemHelper();
   final List<Item> _itemList = <Item>[];
   final List<Category> _categoryList = <Category>[];
 
@@ -110,69 +115,75 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   )
-                : ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 5,
-                      vertical: 0,
-                    ),
-                    itemCount: _categoryList.length,
-                    itemBuilder: (_, int index) {
-                      return GestureDetector(
-                        onTap: () {
-                          print("Just tapped: " +
-                              _categoryList[index].id.toString());
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  CategoryPage(_categoryList[index]),
-                            ),
-                          );
-                        },
-                        onLongPress: () =>
-                            _updateCategoryForm(_categoryList[index], index),
-                        child: Container(
-                          width: 250.0,
-                          height: 250.0,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 25,
-                          ),
-                          child: DecoratedBox(
-                            decoration: new BoxDecoration(
-                              borderRadius: BorderRadius.circular(70),
-                              gradient: new LinearGradient(
-                                begin: FractionalOffset.topLeft,
-                                end: FractionalOffset.bottomCenter,
-                                colors: [
-                                  const Color(0xff007ECE),
-                                  const Color(0xffC418F7),
-                                ],
+                : ClipRRect(
+                    borderRadius:
+                        BorderRadius.only(bottomLeft: Radius.circular(70)),
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      physics: BouncingScrollPhysics(),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 5,
+                        vertical: 0,
+                      ),
+                      itemCount: _categoryList.length,
+                      itemBuilder: (_, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            print("Just tapped: " +
+                                _categoryList[index].id.toString());
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CategoryPage(_categoryList[index]),
                               ),
+                            );
+                          },
+                          onLongPress: () =>
+                              _updateCategoryForm(_categoryList[index], index),
+                          child: Container(
+                            width: 250.0,
+                            height: 250.0,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 25,
                             ),
-                            child: Center(
-                              child: Wrap(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.all(20),
-                                    child: Text(
-                                      _categoryList[index].categoryName,
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: 'Futura',
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
+                            child: DecoratedBox(
+                              decoration: new BoxDecoration(
+                                borderRadius: BorderRadius.circular(70),
+                                gradient: new LinearGradient(
+                                  begin: FractionalOffset.topLeft,
+                                  end: FractionalOffset.bottomCenter,
+                                  colors: [
+                                    const Color(0xff007ECE),
+                                    const Color(0xffC418F7),
+                                  ],
+                                ),
+                              ),
+                              child: Center(
+                                child: Wrap(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.all(20),
+                                      child: Text(
+                                        _categoryList[index].categoryName,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontFamily: 'Futura',
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    }),
+                        );
+                      },
+                    ),
+                  ),
           ),
           Flexible(
             child: _itemList.isEmpty
@@ -398,7 +409,7 @@ class _HomeState extends State<Home> {
                 fillColor: Colors.white,
               ),
             ),
-          )
+          ),
         ],
       ),
       actions: <Widget>[
@@ -678,5 +689,15 @@ class _HomeState extends State<Home> {
     setState(() {
       _categoryList.insert(0, addedCategory);
     });
+  }
+
+  Future<int> getCategoryItemDoneCount(int categoryNr) async {
+    var categoryItemDoneCount = await dbci.getDoneCount(categoryNr);
+    return categoryItemDoneCount;
+  }
+
+  Future<int> getCategoryItemCount(int categoryNr) async {
+    var categoryItemCount = await dbci.getCount(categoryNr);
+    return categoryItemCount;
   }
 }

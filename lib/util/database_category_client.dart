@@ -47,7 +47,8 @@ class DatabaseCategoryHelper {
 
   Future<List> getCategorys() async {
     var dbClient = await getDb;
-    var result = await dbClient.rawQuery("SELECT * FROM $tableName");
+    var result = await dbClient
+        .rawQuery("SELECT * FROM $tableName ORDER BY $columnCategoryName ASC");
     return result.toList();
   }
 

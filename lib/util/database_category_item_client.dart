@@ -55,7 +55,7 @@ class DatabaseCategoryItemHelper {
   Future<List> getCategoryItems(int categoryNr) async {
     var dbClient = await getDb;
     var result = await dbClient.rawQuery(
-        "SELECT * FROM $tableName WHERE $columnCategoryNr=$categoryNr");
+        "SELECT * FROM $tableName WHERE $columnCategoryNr=$categoryNr ORDER BY $columnCategoryItemDone ASC");
     return result.toList();
   }
 
@@ -63,6 +63,12 @@ class DatabaseCategoryItemHelper {
     var dbClient = await getDb;
     return Sqflite.firstIntValue(await dbClient.rawQuery(
         "SELECT COUNT (*) FROM $tableName WHERE $columnCategoryNr=$categoryNr"));
+  }
+
+  Future<int> getDoneCount(int categoryNr) async {
+    var dbClient = await getDb;
+    return Sqflite.firstIntValue(await dbClient.rawQuery(
+        "SELECT COUNT (*) FROM $tableName WHERE $columnCategoryNr=$categoryNr AND $columnCategoryItemDone=1"));
   }
 
   Future<CategoryItem> getCategoryItem(int itemId) async {
