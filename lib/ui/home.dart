@@ -206,6 +206,7 @@ class _HomeState extends State<Home> {
                     ),
                   )
                 : ListView.builder(
+                    physics: BouncingScrollPhysics(),
                     padding: EdgeInsets.all(1),
                     reverse: false,
                     itemCount: _itemList.length,

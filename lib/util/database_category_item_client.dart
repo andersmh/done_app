@@ -1,5 +1,4 @@
 import 'dart:io';
-import '../model/item.dart';
 import 'package:path/path.dart';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
