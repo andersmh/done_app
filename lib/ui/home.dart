@@ -320,6 +320,8 @@ class _HomeState extends State<Home> {
           Expanded(
             child: TextField(
               style: new TextStyle(color: Colors.white, fontFamily: 'Futura'),
+              keyboardType: TextInputType.text,
+              textCapitalization: TextCapitalization.sentences,
               controller: itemController,
               autofocus: true,
               decoration: InputDecoration(
@@ -397,6 +399,8 @@ class _HomeState extends State<Home> {
           Expanded(
             child: TextField(
               style: new TextStyle(color: Colors.white, fontFamily: 'Futura'),
+              keyboardType: TextInputType.text,
+              textCapitalization: TextCapitalization.sentences,
               controller: itemController,
               autofocus: true,
               decoration: InputDecoration(
@@ -477,6 +481,8 @@ class _HomeState extends State<Home> {
               style: new TextStyle(color: Colors.white, fontFamily: 'Futura'),
               controller: itemController,
               autofocus: true,
+              keyboardType: TextInputType.text,
+              textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 hintText: "Task description here",
                 labelStyle: TextStyle(
@@ -583,6 +589,8 @@ class _HomeState extends State<Home> {
               style: new TextStyle(color: Colors.white, fontFamily: 'Futura'),
               controller: itemController,
               autofocus: true,
+              keyboardType: TextInputType.text,
+              textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 hintText: "Category name here",
                 labelStyle: TextStyle(

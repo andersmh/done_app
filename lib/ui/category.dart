@@ -111,6 +111,7 @@ class _CategoryPageState extends State<CategoryPage> {
                     ),
                   )
                 : ListView.builder(
+                    physics: BouncingScrollPhysics(),
                     padding: EdgeInsets.all(1),
                     reverse: false,
                     itemCount: _categoryItemList.length,
@@ -193,6 +194,8 @@ class _CategoryPageState extends State<CategoryPage> {
             child: TextField(
               style: new TextStyle(color: Colors.white, fontFamily: 'Futura'),
               controller: itemController,
+              keyboardType: TextInputType.text,
+              textCapitalization: TextCapitalization.sentences,
               autofocus: true,
               decoration: InputDecoration(
                 hintText: "Task description here",
