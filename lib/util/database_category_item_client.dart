@@ -41,12 +41,14 @@ class DatabaseCategoryItemHelper {
   }
 
   void _onCreate(Database db, int version) async {
-    await db.execute("CREATE TABLE $tableName("
-        "$columnId INTEGER PRIMARY KEY, "
-        "$columnCategoryItemName TEXT, "
-        "$columnDateCreated TEXT,"
-        "$columnCategoryItemDone INTEGER,"
-        "$columnCategoryNr INTEGER);");
+    await db.execute(
+      "CREATE TABLE $tableName("
+          "$columnId INTEGER PRIMARY KEY, "
+          "$columnCategoryItemName TEXT, "
+          "$columnDateCreated TEXT,"
+          "$columnCategoryItemDone INTEGER,"
+          "$columnCategoryNr INTEGER);",
+    );
   }
 
   Future<int> saveCategoryItem(CategoryItem categoryItem) async {
@@ -86,6 +88,13 @@ class DatabaseCategoryItemHelper {
     var db = await getDb;
     int rowsDeleted =
         await db.delete(tableName, where: "$columnId = ?", whereArgs: [id]);
+    return rowsDeleted;
+  }
+
+  Future<int> deleteAllCategoryItems(int categoryNr) async {
+    var db = await getDb;
+    int rowsDeleted = await db.delete(tableName,
+        where: "$columnCategoryNr = ?", whereArgs: [categoryNr]);
     return rowsDeleted;
   }
 

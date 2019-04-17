@@ -25,6 +25,7 @@ class _HomeState extends State<Home> {
   var dbi = new DatabaseItemHelper();
   var dbc = new DatabaseCategoryHelper();
   var dbci = new DatabaseCategoryItemHelper();
+
   final List<Item> _itemList = <Item>[];
   final List<Category> _categoryList = <Category>[];
 

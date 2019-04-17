@@ -4,6 +4,7 @@ import 'package:path/path.dart';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'database_category_item_client.dart';
 
 /*
   Auther: Anders Mæhlum Halvorsen
@@ -16,6 +17,7 @@ class DatabaseCategoryHelper {
 
   static final DatabaseCategoryHelper _instance =
       new DatabaseCategoryHelper.internal();
+  static DatabaseCategoryItemHelper dcih = new DatabaseCategoryItemHelper();
   factory DatabaseCategoryHelper() => _instance;
   static Database _db;
 
@@ -38,9 +40,11 @@ class DatabaseCategoryHelper {
   }
 
   void _onCreate(Database db, int version) async {
-    await db.execute("CREATE TABLE $tableName("
-        "$columnId INTEGER PRIMARY KEY, "
-        "$columnCategoryName TEXT);");
+    await db.execute(
+      "CREATE TABLE $tableName("
+          "$columnId INTEGER PRIMARY KEY, "
+          "$columnCategoryName TEXT);",
+    );
   }
 
   Future<int> saveCategory(Category category) async {
@@ -72,6 +76,8 @@ class DatabaseCategoryHelper {
 
   Future<int> deleteCategory(int id) async {
     var db = await getDb;
+    await dcih.initDb();
+    await dcih.deleteAllCategoryItems(id);
     int rowsDeleted =
         await db.delete(tableName, where: "$columnId = ?", whereArgs: [id]);
     return rowsDeleted;
