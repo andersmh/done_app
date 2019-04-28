@@ -74,7 +74,7 @@ class _HomeState extends State<Home> {
           Container(
             color: Color(0xFF020E38),
             child: Container(
-              height: 140.0,
+              height: 150.0,
               width: 1000,
               decoration: new BoxDecoration(
                 color: Colors.white,
