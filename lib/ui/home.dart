@@ -155,6 +155,18 @@ class _HomeState extends State<Home> {
                             ),
                             child: DecoratedBox(
                               decoration: new BoxDecoration(
+                                boxShadow: [
+                                  new BoxShadow(
+                                      color: Color(0xff007ECE),
+                                      spreadRadius: 1,
+                                      blurRadius: 15,
+                                      offset: Offset(-7, -7)),
+                                  new BoxShadow(
+                                      color: Color(0xffC418F7),
+                                      spreadRadius: 1,
+                                      blurRadius: 15,
+                                      offset: Offset(7, 7)),
+                                ],
                                 borderRadius: BorderRadius.circular(70),
                                 gradient: new LinearGradient(
                                   begin: FractionalOffset.topLeft,
