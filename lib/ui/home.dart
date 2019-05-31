@@ -158,14 +158,14 @@ class _HomeState extends State<Home> {
                                 boxShadow: [
                                   new BoxShadow(
                                       color: Color(0xff007ECE),
-                                      spreadRadius: 1,
+                                      spreadRadius: 0.1,
                                       blurRadius: 15,
-                                      offset: Offset(-7, -7)),
+                                      offset: Offset(-4, -4)),
                                   new BoxShadow(
                                       color: Color(0xffC418F7),
-                                      spreadRadius: 1,
+                                      spreadRadius: 0.1,
                                       blurRadius: 15,
-                                      offset: Offset(7, 7)),
+                                      offset: Offset(4, 4)),
                                 ],
                                 borderRadius: BorderRadius.circular(70),
                                 gradient: new LinearGradient(
