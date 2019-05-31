@@ -181,9 +181,10 @@ class _HomeState extends State<Home> {
                                 child: Wrap(
                                   children: <Widget>[
                                     Padding(
-                                      padding: EdgeInsets.all(20),
+                                      padding: EdgeInsets.all(40),
                                       child: Text(
                                         _categoryList[index].categoryName,
+                                        textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontSize: 20,
                                           fontFamily: 'Futura',
