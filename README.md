@@ -1,7 +1,9 @@
 # Done.
-<img src="https://user-images.githubusercontent.com/31239471/55686789-dd3f6880-5965-11e9-94e0-3a8174b2ce2c.png" height="100" width="100" align="left"/>
+<img src="https://user-images.githubusercontent.com/31239471/55686789-dd3f6880-5965-11e9-94e0-3a8174b2ce2c.png" height="150" width="150" align="left"/>
 <br>
 A beautiful task application where you can group your tasks easily and get a quick overview over the most important daily tasks. Designed in adobe XD. The app was created in flutter.
+<br>
+<br>
 <br>
 
 ## 🧐 Where to download?
